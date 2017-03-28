@@ -27,7 +27,15 @@ class ThingPolicy < ApplicationPolicy
     true
   end
 
+  def get_tags?
+    true
+  end
+
   def add_image?
+    member_or_organizer?
+  end
+
+  def add_tag?
     member_or_organizer?
   end
 
@@ -35,7 +43,16 @@ class ThingPolicy < ApplicationPolicy
     organizer?
   end
 
+
+  def update_tag?
+    organizer?
+  end
+
   def remove_image?
+    organizer_or_admin?
+  end
+
+  def remove_tag?
     organizer_or_admin?
   end
 

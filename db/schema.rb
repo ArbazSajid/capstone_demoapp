@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170130051702) do
+ActiveRecord::Schema.define(version: 20170328161555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,27 @@ ActiveRecord::Schema.define(version: 20170130051702) do
   add_index "roles", ["mname", "mid"], name: "index_roles_on_mname_and_mid", using: :btree
   add_index "roles", ["mname"], name: "index_roles_on_mname", using: :btree
   add_index "roles", ["user_id"], name: "index_roles_on_user_id", using: :btree
+
+  create_table "tag_things", force: :cascade do |t|
+    t.integer  "tag_id",     null: false
+    t.integer  "thing_id",   null: false
+    t.integer  "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "tag_things", ["tag_id", "thing_id"], name: "index_tag_things_on_tag_id_and_thing_id", unique: true, using: :btree
+  add_index "tag_things", ["tag_id"], name: "index_tag_things_on_tag_id", using: :btree
+  add_index "tag_things", ["thing_id"], name: "index_tag_things_on_thing_id", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "value"
+    t.integer  "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "tags", ["creator_id"], name: "index_tags_on_creator_id", using: :btree
 
   create_table "thing_images", force: :cascade do |t|
     t.integer  "image_id",               null: false
@@ -98,6 +119,8 @@ ActiveRecord::Schema.define(version: 20170130051702) do
   add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
 
   add_foreign_key "roles", "users"
+  add_foreign_key "tag_things", "tags"
+  add_foreign_key "tag_things", "things"
   add_foreign_key "thing_images", "images"
   add_foreign_key "thing_images", "things"
 end
